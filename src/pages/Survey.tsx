@@ -14,7 +14,13 @@ const Survey = () => {
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [showFinal, setShowFinal] = useState(false);
 
-  const questions = [
+  const questions: Array<{
+    id: number;
+    question: string;
+    type?: string;
+    subtitle?: string;
+    options?: string[];
+  }> = [
     {
       id: 0,
       question: "Como você se declara?",
@@ -72,11 +78,11 @@ const Survey = () => {
       question:
         "Encontrou o seu portão de entrada com a mesma facilidade que encontra a saída?",
       options: [
-        "Extremamente Fácil (Perfeito!)",
-        "Fácil (Com uma olhada no mapa)",
-        "Razoável (Precisei perguntar)",
-        "Difícil (Me perdi um pouco)",
-        "Muito Difícil (Caótico, sinalização ruim)",
+        "Extremamente Fácil",
+        "Fácil",
+        "Razoável",
+        "Difícil",
+        "Muito Difícil",
       ],
     },
     {
@@ -106,10 +112,12 @@ const Survey = () => {
     },
     {
       id: 8,
-      question: "Qual é a sua 'Vibe' para o próximo evento no Arena BRB?",
-      type: "scale",
-      subtitle: "0 = Não voltarei | 10 = Já comprei meu próximo ingresso",
-      options: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      question: "Qual a sua vibe para o próximo evento no Arena BRB?",
+      options: [
+        "Amei!",
+        "Ja adquiri meu próximo ingresso",
+        "Não voltarei"
+      ],
     },
     {
       id: 9,
