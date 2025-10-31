@@ -14,7 +14,178 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      dim_event: {
+        Row: {
+          capacity: number | null
+          created_at: string | null
+          event_code: string
+          event_date: string
+          event_id: string
+          event_type: string
+          name: string
+        }
+        Insert: {
+          capacity?: number | null
+          created_at?: string | null
+          event_code: string
+          event_date: string
+          event_id?: string
+          event_type: string
+          name: string
+        }
+        Update: {
+          capacity?: number | null
+          created_at?: string | null
+          event_code?: string
+          event_date?: string
+          event_id?: string
+          event_type?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      dim_respondent: {
+        Row: {
+          age_band: string | null
+          created_at: string | null
+          gender: string | null
+          respondent_id: string
+          transport_mode: string | null
+        }
+        Insert: {
+          age_band?: string | null
+          created_at?: string | null
+          gender?: string | null
+          respondent_id?: string
+          transport_mode?: string | null
+        }
+        Update: {
+          age_band?: string | null
+          created_at?: string | null
+          gender?: string | null
+          respondent_id?: string
+          transport_mode?: string | null
+        }
+        Relationships: []
+      }
+      fct_collection_quality: {
+        Row: {
+          complete_responses: number
+          created_at: string | null
+          event_id: string | null
+          id: string
+          invites_sent: number
+          responses_total: number
+          sent_delay_hours: number | null
+        }
+        Insert: {
+          complete_responses?: number
+          created_at?: string | null
+          event_id?: string | null
+          id?: string
+          invites_sent?: number
+          responses_total?: number
+          sent_delay_hours?: number | null
+        }
+        Update: {
+          complete_responses?: number
+          created_at?: string | null
+          event_id?: string | null
+          id?: string
+          invites_sent?: number
+          responses_total?: number
+          sent_delay_hours?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fct_collection_quality_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "dim_event"
+            referencedColumns: ["event_id"]
+          },
+        ]
+      }
+      fct_micro_nps: {
+        Row: {
+          activation: string | null
+          collected_at: string | null
+          event_id: string | null
+          id: string
+          nps_score: number | null
+        }
+        Insert: {
+          activation?: string | null
+          collected_at?: string | null
+          event_id?: string | null
+          id?: string
+          nps_score?: number | null
+        }
+        Update: {
+          activation?: string | null
+          collected_at?: string | null
+          event_id?: string | null
+          id?: string
+          nps_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fct_micro_nps_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "dim_event"
+            referencedColumns: ["event_id"]
+          },
+        ]
+      }
+      fct_response: {
+        Row: {
+          answer_array: Json | null
+          answer_numeric: number | null
+          answer_value: string | null
+          answered_at: string | null
+          event_id: string | null
+          question_id: string
+          respondent_id: string | null
+          response_id: string
+        }
+        Insert: {
+          answer_array?: Json | null
+          answer_numeric?: number | null
+          answer_value?: string | null
+          answered_at?: string | null
+          event_id?: string | null
+          question_id: string
+          respondent_id?: string | null
+          response_id?: string
+        }
+        Update: {
+          answer_array?: Json | null
+          answer_numeric?: number | null
+          answer_value?: string | null
+          answered_at?: string | null
+          event_id?: string | null
+          question_id?: string
+          respondent_id?: string | null
+          response_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fct_response_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "dim_event"
+            referencedColumns: ["event_id"]
+          },
+          {
+            foreignKeyName: "fct_response_respondent_id_fkey"
+            columns: ["respondent_id"]
+            isOneToOne: false
+            referencedRelation: "dim_respondent"
+            referencedColumns: ["respondent_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
