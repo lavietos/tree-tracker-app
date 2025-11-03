@@ -11,23 +11,47 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { supabase } from "@/integrations/supabase/client";
 
 const Results = () => {
-  const [responses, setResponses] = useState(163);
+  const [responses, setResponses] = useState(0);
   const treesPlanted = Math.floor(responses / 100);
   const progressToNext = responses % 100;
   const remainingToNext = 100 - progressToNext;
 
-  // Simulação de respostas em tempo real
+  // Buscar contagem real de respostas e atualizar em tempo real
   useEffect(() => {
-    const interval = setInterval(() => {
-      setResponses((prev) => {
-        const newValue = prev + Math.floor(Math.random() * 3);
-        return newValue > 300 ? 163 : newValue;
-      });
-    }, 3000);
+    const fetchResponseCount = async () => {
+      const { count } = await supabase
+        .from("fct_response")
+        .select("*", { count: "exact", head: true });
+      
+      if (count !== null) {
+        setResponses(count);
+      }
+    };
 
-    return () => clearInterval(interval);
+    fetchResponseCount();
+
+    // Escutar novas respostas em tempo real
+    const channel = supabase
+      .channel("response-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "fct_response",
+        },
+        () => {
+          fetchResponseCount();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const isGoalReached = progressToNext === 0 && responses > 0;
